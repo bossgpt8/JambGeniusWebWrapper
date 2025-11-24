@@ -1,13 +1,15 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+}
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    namespace "com.jambgenius.web.app"
+    compileSdk 30
 
     defaultConfig {
         applicationId "com.jambgenius.web.app"
-        minSdkVersion 16
-        targetSdkVersion 30
+        minSdk 16
+        targetSdk 30
         versionCode 1
         versionName "1.0.0"
     }
@@ -20,8 +22,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
     }
 }
 
