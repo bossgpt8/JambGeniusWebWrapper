@@ -21,8 +21,11 @@ jobs:
     - name: Set up Android SDK
       uses: android-actions/setup-android@v2
 
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
+    - name: Downgrade to Gradle 8.2
+      run: |
+        wget https://services.gradle.org/distributions/gradle-8.2-bin.zip
+        unzip gradle-8.2-bin.zip
+        echo "$(pwd)/gradle-8.2/bin" >> $GITHUB_PATH
 
     - name: Build APK
       run: gradle assembleDebug --no-daemon
@@ -32,4 +35,3 @@ jobs:
       with:
         name: jambgenius-apk
         path: app/build/outputs/apk/debug/app-debug.apk
-
