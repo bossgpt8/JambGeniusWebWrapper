@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 
         webView.setWebViewClient(new WebViewClient());
-        webView.loadUrl("https://jambgenius.vercel.app");
+        webView.loadUrl("https://jamb-genius.vercel.app");
     }
 
     @Override
