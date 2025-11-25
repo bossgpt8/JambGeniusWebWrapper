@@ -8,9 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up JDK
       uses: actions/setup-java@v3
@@ -20,18 +21,21 @@ jobs:
 
     - name: Set up Android SDK
       uses: android-actions/setup-android@v2
-      with:
-        api-level: 33
-        build-tools: 33.0.1
-        ndk: 21.4.7075529
 
-    - name: Fix Gradle wrapper permissions
+    - name: Use Gradle 8.2 (download and add to PATH)
       run: |
-        chmod +x gradlew
-        chmod +x gradle/wrapper/gradle-wrapper.jar
+        wget https://services.gradle.org/distributions/gradle-8.2-bin.zip
+        unzip -q gradle-8.2-bin.zip
+        echo "${{ github.workspace }}/gradle-8.2/bin" >> $GITHUB_PATH
+
+    - name: Show gradle version
+      run: gradle --version
+
+    - name: Clean
+      run: gradle clean --no-daemon
 
     - name: Build APK
-      run: ./gradlew assembleDebug --no-daemon
+      run: gradle assembleDebug --no-daemon
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
