@@ -4,12 +4,12 @@ plugins {
 
 android {
     namespace "com.jambgenius.web.app"
-    compileSdk 30
+    compileSdk 33   // Updated, modern, and compatible
 
     defaultConfig {
         applicationId "com.jambgenius.web.app"
-        minSdk 16
-        targetSdk 30
+        minSdk 21
+        targetSdk 33
         versionCode 1
         versionName "1.0.0"
     }
@@ -19,14 +19,19 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            debuggable true
+        }
     }
 
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.browser:browser:1.5.0'
+    implementation 'com.google.android.material:material:1.9.0'
 }
