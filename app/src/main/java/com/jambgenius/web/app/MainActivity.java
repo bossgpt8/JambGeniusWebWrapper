@@ -15,30 +15,27 @@ import android.webkit.WebViewClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.JavascriptInterface;
-import androidx.browser.customtabs.CustomTabsIntent;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import android.graphics.Color;
+
 import android.view.WindowManager;
 
 public class MainActivity extends Activity {
     private WebView webView;
-    private static final String TAG = "JambGenius";
-    private static final int PERMISSION_REQUEST_CODE = 100;
     private static final int FILE_PICKER_CODE = 101;
     private static final int VOICE_RECORD_CODE = 102;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        // Prevent screenshots and screen recording
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-        
-        setContentView(R.layout.activity_main);
 
+        // Prevent screenshots/screen recording
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+
+        setContentView(R.layout.activity_main);
         webView = findViewById(R.id.webview);
-        
+
         // Configure WebView
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -48,11 +45,13 @@ public class MainActivity extends Activity {
         settings.setLoadWithOverviewMode(true);
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         settings.setUserAgentString("JambGeniusApp/1.0");
-        settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        settings.setAppCacheEnabled(true);
-        settings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
 
-        // Add JavaScript interface for auth handling
+        // Modern cache handling (AppCache removed in Android)
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        settings.setAllowFileAccess(true);
+        settings.setAllowContentAccess(true);
+
+        // JavaScript bridge
         webView.addJavascriptInterface(new AuthBridge(), "AndroidAuth");
 
         webView.setWebViewClient(new WebViewClient() {
@@ -62,29 +61,21 @@ public class MainActivity extends Activity {
                     handleDeepLink(url);
                     return true;
                 }
-                return super.shouldOverrideUrlLoading(view, url);
+                return false;
             }
 
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                super.onReceivedError(view, request, error);
                 handleWebError(error);
             }
         });
 
-        webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                if (newProgress == 100) {
-                    webView.evaluateJavascript("javascript:console.log('Page loaded')", null);
-                }
-                super.onProgressChanged(view, newProgress);
-            }
-        });
+        webView.setWebChromeClient(new WebChromeClient());
 
         webView.loadUrl("https://jambgenius.vercel.app");
     }
 
+    // JavaScript Interface
     private class AuthBridge {
         @JavascriptInterface
         public void openGoogleSignIn() {
@@ -100,14 +91,12 @@ public class MainActivity extends Activity {
 
         @JavascriptInterface
         public void requestImagePicker() {
-            checkAndRequestPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE, 
-                android.Manifest.permission.CAMERA, FILE_PICKER_CODE);
+            checkPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE, FILE_PICKER_CODE);
         }
 
         @JavascriptInterface
         public void requestVoiceRecord() {
-            checkAndRequestPermission(android.Manifest.permission.RECORD_AUDIO, 
-                null, VOICE_RECORD_CODE);
+            checkPermission(android.Manifest.permission.RECORD_AUDIO, VOICE_RECORD_CODE);
         }
 
         @JavascriptInterface
@@ -116,22 +105,10 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void handleDeepLink(String url) {
-        Uri uri = Uri.parse(url);
-        String token = uri.getQueryParameter("token");
-        if (token != null) {
-            webView.evaluateJavascript("javascript:window.handleAuthCallback('" + token + "')", null);
-        }
-    }
-
-    private void checkAndRequestPermission(String permission, String secondaryPermission, int requestCode) {
+    private void checkPermission(String permission, int requestCode) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED ||
-                (secondaryPermission != null && ContextCompat.checkSelfPermission(this, secondaryPermission) != PackageManager.PERMISSION_GRANTED)) {
-                
-                String[] permissions = secondaryPermission != null ? 
-                    new String[]{permission, secondaryPermission} : new String[]{permission};
-                ActivityCompat.requestPermissions(this, permissions, requestCode);
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
             } else {
                 onPermissionGranted(requestCode);
             }
@@ -142,82 +119,52 @@ public class MainActivity extends Activity {
 
     private void onPermissionGranted(int requestCode) {
         if (requestCode == FILE_PICKER_CODE) {
-            webView.evaluateJavascript("javascript:window.onImagePermissionGranted && window.onImagePermissionGranted()", null);
+            webView.evaluateJavascript("window.onImagePermissionGranted && window.onImagePermissionGranted()", null);
         } else if (requestCode == VOICE_RECORD_CODE) {
-            webView.evaluateJavascript("javascript:window.onVoicePermissionGranted && window.onVoicePermissionGranted()", null);
+            webView.evaluateJavascript("window.onVoicePermissionGranted && window.onVoicePermissionGranted()", null);
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        
-        boolean allGranted = true;
-        for (int result : grantResults) {
-            if (result != PackageManager.PERMISSION_GRANTED) {
-                allGranted = false;
-                break;
-            }
-        }
-
-        if (allGranted) {
-            onPermissionGranted(requestCode);
-        } else {
-            webView.evaluateJavascript("javascript:window.onPermissionDenied && window.onPermissionDenied()", null);
+    private void handleDeepLink(String url) {
+        Uri uri = Uri.parse(url);
+        String token = uri.getQueryParameter("token");
+        if (token != null) {
+            webView.evaluateJavascript("window.handleAuthCallback('" + token + "')", null);
         }
     }
 
     private boolean hasInternetConnection() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(android.content.Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         if (cm != null) {
-            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-            return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+            NetworkInfo net = cm.getActiveNetworkInfo();
+            return net != null && net.isConnected();
         }
         return false;
     }
 
     private void handleWebError(WebResourceError error) {
-        if (error != null) {
-            int errorCode = error.getErrorCode();
-            
-            // Check if it's a connection error
-            if (errorCode == WebViewClient.ERROR_HOST_LOOKUP ||
-                errorCode == WebViewClient.ERROR_CONNECT ||
-                errorCode == WebViewClient.ERROR_TIMEOUT ||
-                errorCode == WebViewClient.ERROR_IO ||
-                errorCode == WebViewClient.ERROR_UNKNOWN) {
-                
-                String errorPage = "<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><style>" +
-                    "body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }" +
-                    ".error-container { background: white; border-radius: 12px; padding: 30px; max-width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); text-align: center; }" +
-                    ".error-icon { font-size: 60px; margin-bottom: 20px; }" +
-                    "h1 { color: #333; font-size: 24px; margin: 20px 0; }" +
-                    "p { color: #666; line-height: 1.6; margin: 15px 0; }" +
-                    ".error-code { color: #999; font-size: 12px; margin-top: 20px; }" +
-                    ".retry-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 30px; border-radius: 6px; font-size: 16px; cursor: pointer; margin-top: 20px; }" +
-                    ".retry-btn:active { opacity: 0.8; }" +
-                    "</style></head><body>" +
-                    "<div class='error-container'>" +
-                    "<div class='error-icon'>📡</div>" +
-                    "<h1>No Internet Connection</h1>" +
-                    "<p>Please check your internet connection and try again.</p>" +
-                    "<p>Make sure WiFi or mobile data is enabled on your device.</p>" +
-                    "<button class='retry-btn' onclick='location.reload()'>Retry</button>" +
-                    "<div class='error-code'>Error: " + errorCode + "</div>" +
-                    "</div>" +
-                    "</body></html>";
-                
-                webView.loadData(errorPage, "text/html; charset=utf-8", "utf-8");
-            }
+        if (error == null) return;
+
+        int errorCode = error.getErrorCode();
+
+        // Only handle connection errors
+        if (errorCode == WebViewClient.ERROR_HOST_LOOKUP ||
+            errorCode == WebViewClient.ERROR_CONNECT ||
+            errorCode == WebViewClient.ERROR_TIMEOUT ||
+            errorCode == WebViewClient.ERROR_IO) {
+
+            String html = "<html><body style='display:flex;justify-content:center;align-items:center;height:100vh;background:#fafafa;font-family:sans-serif;text-align:center;'>"
+                    + "<div><h2>No Internet</h2><p>Please check your connection.</p>"
+                    + "<button onclick='location.reload()' style='padding:10px 20px;background:#4a6cf7;color:#fff;border:none;border-radius:6px;'>Retry</button>"
+                    + "</div></body></html>";
+
+            webView.loadData(html, "text/html", "UTF-8");
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack();
-        } else {
-            super.onBackPressed();
-        }
+        if (webView.canGoBack()) webView.goBack();
+        else super.onBackPressed();
     }
 }
