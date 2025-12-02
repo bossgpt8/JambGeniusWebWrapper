@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1057264829205",
+    "project_id": "jambgenius",
+    "storage_bucket": "jambgenius.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057264829205:android:8934dfd37ce2a6c6d95f1c",
+        "android_client_info": {
+          "package_name": "com.jambgenius.web.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057264829205-7jphuk8ilgrv9o24h0eqfof8251tm94p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jambgenius.web.app",
+            "certificate_hash": "3be38a39d73b2bc8e731bc3c05568c9c932f2cae"
+          }
+        },
+        {
+          "client_id": "1057264829205-vsb491l02k1hv8r4j5693nj9uuurp11h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jambgenius.web.app",
+            "certificate_hash": "c17fb17e485d1858979d3204c8ac4567195d226d"
+          }
+        },
+        {
+          "client_id": "1057264829205-4o5uiohg7c1jj7nf6ljan53eft0ld2pr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAG7fNYP4oxNmrXkuYhlCY_dZbw9VSf6ZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057264829205-4o5uiohg7c1jj7nf6ljan53eft0ld2pr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
