@@ -1,13 +1,9 @@
 package com.jambgenius.web.app;
 
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
-
 import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -17,61 +13,29 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // Log received message
-        if (remoteMessage.getNotification() != null) {
-            String title = remoteMessage.getNotification().getTitle();
-            String body = remoteMessage.getNotification().getBody();
-            sendNotification(title, body);
-        }
+        Context context = getApplicationContext();
+        String channelId = "default_channel";
 
-        if (remoteMessage.getData().size() > 0) {
-            String title = remoteMessage.getData().get("title");
-            String body = remoteMessage.getData().get("body");
-            sendNotification(title, body);
-        }
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context, 0, intent, PendingIntent.FLAG_IMMUTABLE
+        );
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.mipmap.ic_launcher) // Use ic_launcher if ic_notification missing
+                .setContentTitle(remoteMessage.getNotification() != null ? remoteMessage.getNotification().getTitle() : "New Message")
+                .setContentText(remoteMessage.getNotification() != null ? remoteMessage.getNotification().getBody() : "You have a new notification.")
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, builder.build());
     }
 
     @Override
     public void onNewToken(String token) {
+        // Handle new token if needed
         super.onNewToken(token);
-        // You can send this token to your server if needed
-    }
-
-    private void sendNotification(String title, String messageBody) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                this, 0, intent,
-                Build.VERSION.SDK_INT >= 31 ?
-                        PendingIntent.FLAG_IMMUTABLE :
-                        PendingIntent.FLAG_ONE_SHOT
-        );
-
-        String channelId = "default_channel_id";
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        NotificationManager notificationManager = 
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    channelId,
-                    "General Notifications",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(getApplicationContext(), channelId)
-                        .setSmallIcon(R.drawable.ic_notification)
-                        .setContentTitle(title != null ? title : "Message")
-                        .setContentText(messageBody != null ? messageBody : "")
-                        .setAutoCancel(true)
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
-
-        notificationManager.notify((int) System.currentTimeMillis(), notificationBuilder.build());
     }
 }
