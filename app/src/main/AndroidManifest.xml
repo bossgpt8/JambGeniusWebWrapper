@@ -12,7 +12,6 @@
     <application
         android:allowBackup="true"
         android:usesCleartextTraffic="true"
-        android:webViewDataDirectorySuffix="webview"
         android:supportsRtl="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
