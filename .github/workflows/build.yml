@@ -26,6 +26,9 @@ jobs:
         build-tools: 33.0.1
         ndk: 21.4.7075529
 
+    - name: Make Gradle wrapper executable
+      run: chmod +x ./gradlew
+
     - name: Verify Gradle Wrapper
       run: ./gradlew --version
 
@@ -40,3 +43,4 @@ jobs:
       with:
         name: jambgenius-apk
         path: app/build/outputs/apk/debug/app-debug.apk
+        
