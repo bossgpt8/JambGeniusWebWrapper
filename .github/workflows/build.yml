@@ -36,10 +36,10 @@ jobs:
       run: gradle --version
 
     - name: Clean
-      run: gradle clean --no-daemon
+      run: gradle :app:clean --no-daemon
 
     - name: Build APK
-      run: gradle assembleDebug --no-daemon
+      run: gradle :app:assembleDebug --no-daemon
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
