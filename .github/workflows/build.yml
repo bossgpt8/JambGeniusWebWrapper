@@ -21,21 +21,19 @@ jobs:
 
     - name: Set up Android SDK
       uses: android-actions/setup-android@v2
+      with:
+        api-level: 33
+        build-tools: 33.0.1
+        ndk: 21.4.7075529
 
-    - name: Use Gradle 8.2 (download and add to PATH)
-      run: |
-        wget https://services.gradle.org/distributions/gradle-8.2-bin.zip
-        unzip -q gradle-8.2-bin.zip
-        echo "${{ github.workspace }}/gradle-8.2/bin" >> $GITHUB_PATH
-
-    - name: Show gradle version
-      run: gradle --version
+    - name: Verify Gradle Wrapper
+      run: ./gradlew --version
 
     - name: Clean
-      run: gradle clean --no-daemon
+      run: ./gradlew clean --no-daemon
 
     - name: Build APK
-      run: gradle assembleDebug --no-daemon
+      run: ./gradlew assembleDebug --no-daemon
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
