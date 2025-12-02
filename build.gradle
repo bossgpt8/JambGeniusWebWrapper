@@ -1,5 +1,12 @@
-plugins {
-    id 'com.android.application' version '8.1.0' apply false
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.1.2'
+        classpath 'com.google.gms:google-services:4.4.2'
+    }
 }
 
 allprojects {
@@ -7,8 +14,4 @@ allprojects {
         google()
         mavenCentral()
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
