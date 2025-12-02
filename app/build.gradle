@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace "com.jambgenius.web.app"
-    compileSdk 33   // Updated, modern, and compatible
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.jambgenius.web.app"
@@ -34,4 +34,11 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.browser:browser:1.5.0'
     implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.core:core:1.12.0'
+
+    // Firebase Messaging
+    implementation platform('com.google.firebase:firebase-bom:32.2.0')
+    implementation 'com.google.firebase:firebase-messaging'
 }
+
+apply plugin: 'com.google.gms.google-services'
