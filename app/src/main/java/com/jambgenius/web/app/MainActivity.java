@@ -49,8 +49,6 @@ public class MainActivity extends Activity {
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         settings.setUserAgentString("JambGeniusApp/1.0");
         settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        settings.setAppCacheEnabled(true);
-        settings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
 
         // Add JavaScript interface for auth handling
         webView.addJavascriptInterface(new AuthBridge(), "AndroidAuth");
