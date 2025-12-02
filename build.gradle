@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        mavenCentral() // DO NOT add google() here
+        mavenCentral()  // DO NOT use google() here; settings.gradle handles it
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.1.2'
@@ -10,6 +10,6 @@ buildscript {
 
 allprojects {
     repositories {
-        mavenCentral() // DO NOT add google() here
+        mavenCentral()  // only Maven Central
     }
 }
