@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        google()
+        // Removed google(), kept only mavenCentral
         mavenCentral()
     }
     dependencies {
@@ -11,7 +11,7 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
+        // Removed google(), kept only mavenCentral
         mavenCentral()
     }
 }
