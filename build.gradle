@@ -1,7 +1,6 @@
 buildscript {
     repositories {
-        // Removed google(), kept only mavenCentral
-        mavenCentral()
+        mavenCentral() // DO NOT add google() here
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.1.2'
@@ -11,7 +10,6 @@ buildscript {
 
 allprojects {
     repositories {
-        // Removed google(), kept only mavenCentral
-        mavenCentral()
+        mavenCentral() // DO NOT add google() here
     }
 }
