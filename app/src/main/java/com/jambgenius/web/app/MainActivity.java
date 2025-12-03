@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         settings.setDomStorageEnabled(true); // Required for modern websites
 
         webView.setWebViewClient(new WebViewClient());
-        webView.loadUrl("https://your-website-url.com");
+        webView.loadUrl("https://jambgenius.vercel.app");
     }
 
     @Override
