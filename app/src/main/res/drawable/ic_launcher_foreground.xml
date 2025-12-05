@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Background circle -->
+    <path
+        android:fillColor="#2563EB"
+        android:pathData="M54,54m-40,0a40,40 0,1 1,80 0a40,40 0,1 1,-80 0"/>
+    
+    <!-- Graduation cap base -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,35L30,47L54,59L78,47L54,35Z"/>
+    
+    <!-- Graduation cap top -->
+    <path
+        android:fillColor="#F97316"
+        android:pathData="M54,35L54,28L62,35L54,35Z"/>
+    
+    <!-- Book/tassel -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M78,47L78,60L76,62L74,60L74,48Z"/>
+    
+    <!-- Cap band -->
+    <path
+        android:fillColor="#1E40AF"
+        android:pathData="M38,50L38,65C38,68 45,72 54,72C63,72 70,68 70,65L70,50L54,59L38,50Z"/>
+    
+    <!-- Letter J -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M46,52L46,62C46,64 48,66 51,66L51,64C49,64 48,63 48,62L48,52L46,52Z"/>
+    
+    <!-- Letter G -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M57,52C54,52 52,54 52,57C52,60 54,62 57,62C59,62 60,61 60,60L58,60C58,60.5 57.5,61 57,61C55,61 54,59.5 54,57C54,54.5 55,53 57,53C58,53 59,54 59,55L61,55C61,53 59,52 57,52ZM58,57L58,59L60,59L60,57L58,57Z"/>
+        
+</vector>
