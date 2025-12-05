@@ -1,5 +1,4 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/bash
+set -e
 
-chmod +x ./gradlew
-./gradlew assembleDebug
+./gradlew clean assembleDebug
