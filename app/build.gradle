@@ -33,14 +33,7 @@ android {
 }
 
 dependencies {
-    constraints {
-        implementation('org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22') {
-            because 'kotlin-stdlib-jdk7 is now part of kotlin-stdlib'
-        }
-        implementation('org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22') {
-            because 'kotlin-stdlib-jdk8 is now part of kotlin-stdlib'
-        }
-    }
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.22'
     
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.browser:browser:1.7.0'
@@ -50,4 +43,3 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:32.7.0')
     implementation 'com.google.firebase:firebase-messaging'
 }
-
