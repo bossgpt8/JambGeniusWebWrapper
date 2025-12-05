@@ -33,3 +33,4 @@ jobs:
       with:
         name: jambgenius-debug-apk
         path: JambGeniusWebWrapper/app/build/outputs/apk/debug/app-debug.apk
+
