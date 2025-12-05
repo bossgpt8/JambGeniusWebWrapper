@@ -1,5 +1,4 @@
 name: Build APK
-
 on:
   push:
     branches: [ main, master ]
@@ -8,30 +7,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    # Checkout the repository
-    - uses: actions/checkout@v4
-
-    # Set up Java 17
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-
-    # Set up Android SDK
-    - name: Set up Android SDK
-      uses: android-actions/setup-android@v2
-
-    # Build APK
-    - name: Build APK
-      shell: bash
-      run: chmod +x ./gradlew && ./gradlew :app:assembleDebug --no-daemon --stacktrace
-
-    # Upload the generated APK
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: jambgenius-apk
-        path: app/build/outputs/apk/debug/app-debug.apk
+      - uses: actions/checkout@v4
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: temurin
+      - name: Grant Gradle permission and build
+        run: |
+          chmod +x ./gradlew
+          ./gradlew :app:assembleDebug
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: jambgenius-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
