@@ -1,4 +1,5 @@
 #!/bin/bash
 set -e
 
-./gradlew clean assembleDebug
+# Run build inside the app module
+./gradlew :app:clean :app:assembleDebug
