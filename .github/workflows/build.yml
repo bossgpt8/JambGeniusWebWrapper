@@ -8,6 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Debug file contents
+      run: |
+        echo "=== ci-build-apk.sh contents ==="
+        cat -A ci-build-apk.sh
+        echo "=== end ==="
     - uses: actions/setup-java@v4
       with:
         java-version: 17
