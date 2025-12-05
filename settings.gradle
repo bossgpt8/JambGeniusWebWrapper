@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "JambGenius"
+rootProject.name = "JambGeniusWebWrapper"
 include ':app'
