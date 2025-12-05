@@ -26,9 +26,8 @@ jobs:
 
     # Build APK
     - name: Build APK
-  shell: bash
-  run: chmod +x ./gradlew && ./gradlew :app:assembleDebug --no-daemon --stacktrace
-
+      shell: bash
+      run: chmod +x ./gradlew && ./gradlew :app:assembleDebug --no-daemon --stacktrace
 
     # Upload the generated APK
     - name: Upload APK
