@@ -2,7 +2,7 @@ name: Build APK
 
 on:
   push:
-    branches: [main, master]
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
@@ -10,39 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout your repo
-      - name: Checkout
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v3
 
-      # Show the ci-build-apk.sh contents to debug errors
-      - name: Debug file contents
-        run: |
-          echo "=== ci-build-apk.sh contents ==="
-          cat -A ci-build-apk.sh || echo "File not found!"
-          echo "=== end ==="
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
 
-      # Install Java
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v2
 
-      # Install Android SDK
-      - name: Install Android SDK
-        uses: android-actions/setup-android@v2
+    - name: Build APK
+      run: |
+        chmod +x ./gradlew
+        ./gradlew assembleDebug
 
-      # Make script executable
-      - name: Make build script executable
-        run: chmod +x ci-build-apk.sh
-
-      # Run your build script
-      - name: Build APK
-        run: bash ci-build-apk.sh
-
-      # Upload APK artifact
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: jambgenius-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: jambgenius-apk
+        path: app/build/outputs/apk/debug/app-debug.apk
