@@ -4,9 +4,25 @@ workflows:
     max_build_duration: 60
     environment:
       java: openjdk17
-      flutter: none
+      flutter: none          # Android-only, skip Flutter/iOS setup
     scripts:
+      # Give Gradle execution permission
       - chmod +x ./gradlew
+
+      # Clean previous builds
+      - ./gradlew clean
+
+      # Build Debug APK
       - ./gradlew :app:assembleDebug
+
+      # Build Release APK (unsigned)
+      - ./gradlew :app:assembleRelease
+
     artifacts:
       - app/build/outputs/apk/debug/app-debug.apk
+      - app/build/outputs/apk/release/app-release-unsigned.apk
+
+    publishing:
+      email:
+        notify_on_success: true
+        notify_on_failure: true
