@@ -1,0 +1,25 @@
+workflows:
+  build-android-apk:
+    name: Build Android APK
+    max_build_duration: 60
+    environment:
+      flutter: false
+      java: openjdk17
+      xcode: false
+      cocoapods: false
+      android:
+        sdk: "latest"
+        build_tools: "33.0.2"
+    scripts:
+      - name: Grant Gradle execution permission
+        script: chmod +x ./gradlew
+      - name: Assemble Debug APK
+        script: ./gradlew :app:assembleDebug
+    artifacts:
+      - app/build/outputs/apk/debug/app-debug.apk
+    publishing:
+      email:
+        recipients:
+          - osanisrael2@gmail.com
+        notify_on_success: true
+        notify_on_failure: true
