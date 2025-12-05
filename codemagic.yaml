@@ -3,9 +3,7 @@ workflows:
     name: Build Android APK
     max_build_duration: 60
     environment:
-      # Only need Java for Android builds
       java: openjdk17
-      os: linux
     scripts:
       - name: Grant Gradle execution permission
         script: chmod +x ./gradlew
